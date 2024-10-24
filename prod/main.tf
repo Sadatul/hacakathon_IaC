@@ -37,7 +37,7 @@ module "app_backend" {
   zone                   = local.zone
   database_user_password = var.database_user_password
   database_user_username = var.database_user_username
-  database_url           = var.database_url
+  # database_url           = var.database_url
   email_password         = var.email_password
   zipkin_auth            = trimspace(data.local_file.auth_file.content)
 }
@@ -45,9 +45,9 @@ module "app_backend" {
 #   value = base64encode(trimspace(data.local_file.auth_file.content))
 # }
 
-output "auth2" {
-  value = module.app_backend.zipkin_output
-}
+# output "auth2" {
+#   value = module.app_backend.zipkin_output
+# }
 
 output "database_ip" {
   value = module.app_backend.authservice_database_ip

@@ -42,9 +42,9 @@ resource "kubernetes_config_map" "main-config" {
   data = {
     REDIS_SERVICE_HOST = google_redis_instance.redis_instance.host
     # BACKEND_HOST                    = "http://${google_compute_global_address.pinklife_line_ip.address}"
-    BACKEND_HOST  = "https://api.pinklifeline.xyz"
+    BACKEND_HOST  = "https://api.${var.environment}.pinklifeline.xyz"
     FRONTEND_HOST = "https://www.pinklifeline.xyz"
-    ZIPKIN_HOST = "http://zipkin:9411"
+    RABBITMQ_HOST = "rabbitmq"
   }
 
   depends_on = [google_container_cluster.kubernetese_cluster]
@@ -97,9 +97,9 @@ resource "kubernetes_secret" "sa_secret" {
 #   ]
 # }
 
-output "zipkin_output" {
-  value = base64encode(var.zipkin_auth)
-}
+# output "zipkin_output" {
+#   value = base64encode(var.zipkin_auth)
+# }
 
 locals {
   name = "ksa"
@@ -142,6 +142,8 @@ data "kubernetes_service_account" "collector" {
     name      = "collector"
     namespace = "gmp-system"
   }
+
+  depends_on = [ google_container_cluster.kubernetese_cluster, google_container_node_pool.primary_preemptible_nodes ]
 }
 
 resource "kubernetes_annotations" "collector_annotations" {
@@ -154,6 +156,8 @@ resource "kubernetes_annotations" "collector_annotations" {
   annotations = {
     "iam.gke.io/gcp-service-account" = "${google_service_account.monitoring_sa.email}"
   }
+
+  depends_on = [ google_container_cluster.kubernetese_cluster, google_container_node_pool.primary_preemptible_nodes ]
 }
 
 resource "helm_release" "nginx_ingress" {

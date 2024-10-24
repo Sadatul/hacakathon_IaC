@@ -24,18 +24,18 @@ resource "google_secret_manager_secret_version" "db_username_version" {
   secret_data = var.database_user_username
 }
 
-resource "google_secret_manager_secret" "db_url" {
-  provider  = google
-  secret_id = "db_url_${var.environment}"
-  replication {
-    auto {}
-  }
-}
+# resource "google_secret_manager_secret" "db_url" {
+#   provider  = google
+#   secret_id = "db_url_${var.environment}"
+#   replication {
+#     auto {}
+#   }
+# }
 
-resource "google_secret_manager_secret_version" "db_url_version" {
-  secret      = google_secret_manager_secret.db_url.id
-  secret_data = var.database_url
-}
+# resource "google_secret_manager_secret_version" "db_url_version" {
+#   secret      = google_secret_manager_secret.db_url.id
+#   secret_data = var.database_url
+# }
 
 resource "google_secret_manager_secret" "email_password" {
   provider  = google

@@ -1,2 +1,3 @@
 deployment:
   host: zipkin.qa.pinklifeline.xyz
+  rabbitmq: rabbitmq.qa.pinklifeline.xyz

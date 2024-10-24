@@ -10,11 +10,11 @@ variable "database_user_username" {
   sensitive   = true
 }
 
-variable "database_url" {
-  type      = string
-  description = "Url for database"
-  sensitive = true
-}
+# variable "database_url" {
+#   type      = string
+#   description = "Url for database"
+#   sensitive = true
+# }
 
 variable "email_password" {
   type      = string
