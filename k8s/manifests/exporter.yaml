@@ -1,0 +1,60 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: exporter
+#   labels:
+#     app: pinklifeline
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: exporter
+#   template:
+#     metadata:
+#       labels:
+#         app: exporter
+#     spec:
+#       serviceAccountName: "ksa"
+#       containers:
+#       - name: otelcol
+#         image: otel/opentelemetry-collector-contrib:0.110.0
+#         imagePullPolicy: Always
+#         ports:
+#         - containerPort: 4318
+#         env:
+#         - name: GOOGLE_CLOUD_PROJECT
+#           value: "hackathon-438400"
+#         - name: GOOGLE_CLOUD_QUOTA_PROJECT
+#           value: "hackathon-438400"
+#         resources:
+#           requests:
+#             memory: "256Mi"
+#             cpu: "100m"
+#           limits:
+#             memory: "512Mi"
+#             cpu: "250m"
+#         volumeMounts:
+#         - name: config-volume
+#           mountPath: /etc/otelcol-contrib/config.yaml
+#           subPath: config.yaml
+#       volumes:
+#       - name: config-volume
+#         configMap:
+#           name: otel-config
+#           items:
+#           - key: config.yaml
+#             path: config.yaml
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: exporter
+#   labels:
+#     app: pinklifeline
+# spec:
+#   type: ClusterIP
+#   ports:
+#   - port: 4318
+#     targetPort: 4318
+#   selector:
+#     app: exporter

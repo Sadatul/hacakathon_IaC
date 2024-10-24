@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rabbitmq-ingress
+  annotations:
+    cert-manager.io/issuer: "letsencrypt-prod"
+    # nginx.ingress.kubernetes.io/auth-type: basic
+    # nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    # nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ deployment.rabbitmq }}
+      secretName: pinklifeline-tls
+  rules:
+    - host: {{ deployment.rabbitmq }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rabbitmq
+                port:
+                  number: 15672
